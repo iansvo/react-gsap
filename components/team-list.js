@@ -92,6 +92,7 @@ export default function TeamList({ people, filter }) {
       if (!allActive) {
         layoutDispatch({type: 'UPDATE_FILTERS', filters: [...roles]})
         setAllActive(true)
+        layoutDispatch({type: 'ADD_ITEMS'})
       }
     }
 
@@ -114,9 +115,9 @@ export default function TeamList({ people, filter }) {
     }
 
     return (
-      <div className="mb-8 flex gap-6 items-center text-sm" aria-label="Filter Users by Role">
-        <strong>Filter Users</strong>
-        <ul role="list" className="flex gap-4">
+      <div className="mb-8 flex flex-wrap gap-x-6 gap-y-1 text-sm px-4 sm:px-0 items-center" aria-label="Filter Users by Role">
+        <strong className="whitespace-nowrap my-1">Filter Users</strong>
+        <ul role="list" className="flex flex-wrap gap-4">
           <li>
             <button
               type="button"
@@ -189,7 +190,7 @@ export default function TeamList({ people, filter }) {
       {filter === true ?
         <Filters />
         : null}
-      <ul role="list" className="c-team-list grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" ref={listRef}>
+      <ul role="list" className="c-team-list grid grid-cols-1 gap-6 px-4 sm:px-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" ref={listRef}>
         {layout.items?.map(person => (
           <li
             key={person.email}

@@ -16,26 +16,42 @@ export default function TeamList({ people, filter }) {
 
   const [allActive, setAllActive] = React.useState(true)
 
-  function layoutReducer(prev, action) {
+  function layoutReducer(state, action) {
     switch(action.type) {
-      
+      case 'ADD_ITEMS':
+        return {
+          ...state,
+          state: Flip.getState(flipSelector('.c-team-list_item')),
+          items: people.filter(person => state.filters.includes(person.role))
+                        .map(person => {
+                          person.status = 'visible'
+
+                          return person
+                        })
+        }
+      case 'REMOVE_ITEMS':
+        return {
+          ...state,
+          items: state.items.filter(item => state.filters.includes(item.role)),
+          state: Flip.getState(flipSelector('.c-team-list_item'))
+        }              
       case 'UPDATE_ITEMS':
-        const newItems = people.filter(person => prev.filters.includes(person.role))
+        const newItems = people.filter(person => state.filters.includes(person.role))
   
         newItems.forEach(item => item.status = 'visible')
         return {
-          ...prev,
+          ...state,
           items: [...newItems],
           state: Flip.getState(flipSelector('.c-team-list_item'))
         }
       case 'UPDATE_STATE':
         return {
-          ...prev,
+          ...state,
           state: Flip.getState(flipSelector('.c-team-list_item'))
         }
       case 'UPDATE_FILTERS':
         // Prep the items that will be removed by flagging them in advance
-        const currentItems = prev.items.map(item => {
+        const currentItems = state.items.map(item => {
           if( !action.filters.includes(item.role) ) {
             item.status = 'exiting'
           }
@@ -43,7 +59,7 @@ export default function TeamList({ people, filter }) {
         })
 
         return {
-          ...prev,
+          ...state,
           filters: [...action.filters],
           items: [...currentItems],
           state: Flip.getState(flipSelector('.c-team-list_item'))
@@ -71,10 +87,6 @@ export default function TeamList({ people, filter }) {
     return classNames(classes)
   }
 
-  React.useEffect(() => {
-    console.log('state updated', layout.state)
-  }, [layout.state])
-
   const Filters = () => {
 
     const allToggle = () => {
@@ -93,6 +105,11 @@ export default function TeamList({ people, filter }) {
         type: 'UPDATE_FILTERS',
         filters: [...newFilters]
       })
+
+      // Update the items if this filter is being turned on
+      if( !isActive ) {
+        layoutDispatch({type: 'ADD_ITEMS'})
+      }
 
       // If all filters are selected, set allActive to true
       setAllActive(newFilters.length === roles.length)
@@ -163,7 +180,8 @@ export default function TeamList({ people, filter }) {
       }
     })
 
-    timeline.add(() => layoutDispatch({type: 'UPDATE_ITEMS'}));
+    // Remove any items that are being hidden after the animation exits
+    timeline.add(() => layoutDispatch({type: 'REMOVE_ITEMS'}));
 
   }, [layout.filters])  
 

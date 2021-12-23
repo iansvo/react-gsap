@@ -14,6 +14,7 @@ export default function Team() {
       telephone: '+1-202-555-0170',
       imageUrl:
         'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
+      status: 'visible'
     },
     {
       name: 'Max Fischer',
@@ -23,6 +24,7 @@ export default function Team() {
       telephone: '+1-555-555-5555',
       imageUrl:
         '/fischer.jpeg',
+      status: 'visible'
     },
     {
       name: 'Steve Zissou',
@@ -32,6 +34,7 @@ export default function Team() {
       telephone: '+1-222-555-1111',
       imageUrl:
         '/zissou.jpeg',
+      status: 'visible'
     },
     {
       name: 'John McClane',
@@ -41,6 +44,7 @@ export default function Team() {
       telephone: '+1-333-555-1111',
       imageUrl:
         '/mcclane.jpeg',
+      status: 'visible'
     },  
     {
       name: 'Ender Wiggin',
@@ -50,6 +54,7 @@ export default function Team() {
       telephone: '+1-333-555-1111',
       imageUrl:
         '/wiggin.jpeg',
+      status: 'visible'
     },            
     // More people...
   ]

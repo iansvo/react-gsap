@@ -18,6 +18,10 @@ export default function TeamList({ people, filter }) {
 
   function layoutReducer(state, action) {
     switch(action.type) {
+      /* 
+        Add new items to the list that weren't there before
+        and set the status to visible to prep the intro animation
+      */
       case 'ADD_ITEMS':
         return {
           ...state,
@@ -29,21 +33,15 @@ export default function TeamList({ people, filter }) {
                           return person
                         })
         }
+      /*
+        Remove the items from the DOM, used as a cleanup for the FLIP animation
+      */
       case 'REMOVE_ITEMS':
         return {
           ...state,
           items: state.items.filter(item => state.filters.includes(item.role)),
           state: Flip.getState(flipSelector('.c-team-list_item'))
         }              
-      case 'UPDATE_ITEMS':
-        const newItems = people.filter(person => state.filters.includes(person.role))
-  
-        newItems.forEach(item => item.status = 'visible')
-        return {
-          ...state,
-          items: [...newItems],
-          state: Flip.getState(flipSelector('.c-team-list_item'))
-        }
       case 'UPDATE_STATE':
         return {
           ...state,
@@ -98,7 +96,7 @@ export default function TeamList({ people, filter }) {
     }
 
     const handleClick = (role, isActive) => {
-      const {filters, items}  = layout
+      const {filters}  = layout
       const newFilters = isActive ? filters.filter(filter => filter !== role) : [role, ...filters]
 
       layoutDispatch({
@@ -150,7 +148,7 @@ export default function TeamList({ people, filter }) {
     )
   }
 
-
+  // We use this to ensure updates happen after DOM manipulation
   React.useLayoutEffect(() => {
 
     if( !layout.state ) return

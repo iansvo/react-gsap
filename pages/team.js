@@ -2,6 +2,7 @@
 import Head from 'next/head'
 import Header from '../components/header'
 import TeamList from '../components/team-list'
+import { PageTransition } from '../components/transitions'
 
 export default function Team() {
 
@@ -68,9 +69,11 @@ export default function Team() {
       </Head>
       <Header title="Team" />
       <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <TeamList people={people} filter={true} />
-        </div>
+        <PageTransition>
+          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <TeamList people={people} filter={true} />
+          </div>
+        </PageTransition>
       </main>
     </>
   )

@@ -191,7 +191,7 @@ export default function TeamList({ people, filter }) {
         <Filters />
         : null}
       <ul role="list" className="c-team-list grid grid-cols-1 gap-6 px-4 sm:px-0 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" ref={listRef}>
-        {layout.items?.map(person => (
+        {layout.items?.length > 0 ? layout.items?.map(person => (
           <li
             key={person.email}
             className={`c-team-list_item col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200 ${person?.status === 'exiting' ? 'hidden' : ''} `}
@@ -233,7 +233,15 @@ export default function TeamList({ people, filter }) {
               </div>
             </div>
           </li>
-        ))}
+        )) : (
+          <li className="col-span-4">
+            {layout.filters.length > 0 ? (
+              <p>No team members found that match your selected filter(s).</p>
+            ) : (
+              <p>Enable at least one filter to see team members.</p>
+            )}
+          </li>
+        )}
       </ul>
     </>
   )

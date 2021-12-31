@@ -1,33 +1,52 @@
 /* This example requires Tailwind CSS v2.0+ */
 import Link from 'next/link'
-import { Fragment } from 'react'
+import { useRouter } from 'next/router'
+import React, { Fragment, useEffect } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
-
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
-const navigation = [
-  { name: 'Dashboard', href: '/', current: true },
-  { name: 'Team', href: '/team', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
-]
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+
 export default function Header({ title }) {
+  const router = useRouter()
+
+  const user = {
+    name: 'Tom Cook',
+    email: 'tom@example.com',
+    imageUrl:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+  }
+  const [navigation, setNavigation] = React.useState([
+    { name: 'Dashboard', href: '/', current: true },
+    { name: 'Team', href: '/team', current: false },
+    // { name: 'Projects', href: '#', current: false },
+    // { name: 'Calendar', href: '#', current: false },
+    // { name: 'Reports', href: '#', current: false },
+  ])
+  
+  const userNavigation = [
+    { name: 'Your Profile', href: '#' },
+    { name: 'Settings', href: '#' },
+    { name: 'Sign out', href: '#' },
+  ]
+
+  function updateNav() {
+    setNavigation((prev) => {
+      console.log(prev)
+      return prev.map(item => {
+        item.current = router.asPath === item.href
+        return item
+      })
+    })    
+  }
+  
+  useEffect(() => {
+    updateNav()
+  }, [])
+
   return (
     <>
       {/*
@@ -53,7 +72,7 @@ export default function Header({ title }) {
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
-                      {navigation.map((item) => (
+                      {navigation?.map((item) => (
                         <Link
                           key={item.name}
                           href={item.href}
@@ -67,6 +86,9 @@ export default function Header({ title }) {
                               'px-3 py-2 rounded-md text-sm font-medium'
                             )}
                             aria-current={item.current ? 'page' : undefined}
+                            onClick={() => { 
+                              updateNav()
+                            }}
                           >
                             {item.name}
                           </a>
@@ -139,7 +161,7 @@ export default function Header({ title }) {
 
             <Disclosure.Panel className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                {navigation.map((item) => (
+                {navigation?.map((item) => (
                   <Disclosure.Button
                     key={item.name}
                     as="a"
